@@ -1,0 +1,9 @@
+# IDEA
+.idea
+
+# CMAKE build output
+cmake-build-*
+
+# Python caches
+*.pyc
+
