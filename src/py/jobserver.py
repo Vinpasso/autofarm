@@ -5,7 +5,7 @@ import shlex
 from asyncio import StreamReader, StreamWriter, AbstractServer
 from typing import List
 
-from attr import dataclass
+from dataclasses import dataclass
 
 
 @dataclass
@@ -30,6 +30,7 @@ class JobServer:
 
     def offload_request(self, request: ExecInvocationParam):
         if not re.search(self.offload_regex_filter, request.command):
+            print(f"[AutoFarm] Ignore {' '.join(request.arguments)}")
             return request
 
         reforge_result = ExecInvocationParam(

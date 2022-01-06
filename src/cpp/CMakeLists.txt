@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 project(cpp)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -61,4 +61,4 @@ endif()
 CPMAddPackage("gh:nlohmann/json@3.9.1")
 
 add_library(autofarm_intercept SHARED exec_intercept.cpp Client.cpp Client.h exec_intercept.h ExecInvocationParam.cpp ExecInvocationParam.h)
-target_link_libraries(autofarm_intercept asio nlohmann_json::nlohmann_json)
+target_link_libraries(autofarm_intercept asio nlohmann_json::nlohmann_json ${CMAKE_DL_LIBS})
