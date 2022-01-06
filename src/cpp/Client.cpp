@@ -15,12 +15,12 @@ AutoFarm::ExecInvocationParam AutoFarm::Client::getOutsourceCommand(const AutoFa
 
         asio::streambuf request;
         std::ostream requestStream(&request);
-        requestStream << json(parameters) << std::endl;
+        requestStream << json(parameters) << "\0";
 
         asio::write(socket, request);
 
         asio::streambuf response;
-        asio::read_until(socket, response, "\n");
+        asio::read_until(socket, response, "\0");
         std::istream responseStream(&response);
         json responseJSON;
         responseStream >> responseJSON;

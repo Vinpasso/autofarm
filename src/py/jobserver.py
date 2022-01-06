@@ -44,11 +44,13 @@ class JobServer:
         return reforge_result
 
     async def handle_client(self, read_channel: StreamReader, write_channel: StreamWriter):
-        request_str = await read_channel.readline()
+        request_str = await read_channel.readuntil(b'\0')
         request = json.loads(request_str, object_hook=lambda o: ExecInvocationParam(**o))
         response = self.offload_request(request)
         response_str = json.dumps(response.__dict__)
-        write_channel.write((response_str + "\n").encode('utf-8'))
+        write_channel.write((response_str).encode('utf-8'))
+        write_channel.write(b'\0')
+        await write_channel.drain()
 
     async def start_server(self, bind_address: str, bind_port: int):
         self._server = await asyncio.start_server(self.handle_client, bind_address, bind_port)
