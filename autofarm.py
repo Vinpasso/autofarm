@@ -1,7 +1,7 @@
 from os import environ
 from pathlib import Path
 
-from src.py.autofarm import run_autofarm
+from src.autofarm.__main__ import run_autofarm
 
 if __name__ == '__main__':
     autofarm_root = Path(__file__).parent.absolute()

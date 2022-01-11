@@ -1,11 +1,12 @@
 import asyncio
 from argparse import ArgumentParser
+from pathlib import Path
 
-from src.py.jobserver import JobServer
-from src.py.subprocess import run_autofarm_invocation
+from autofarm.jobserver import JobServer
+from autofarm.subprocess import run_autofarm_invocation
 
 
-def run_autofarm(autofarm_root: str):
+def run_autofarm(autofarm_root: Path):
     parser = ArgumentParser(description="Automatically distribute a job across multiple nodes.")
 
     parser.add_argument('--jobserver-bind-address', type=str, default='0.0.0.0',
@@ -15,7 +16,7 @@ def run_autofarm(autofarm_root: str):
     parser.add_argument('--remote-shell', type=str, default="ssh",
                         help='The shell to redirect invoked commands to. Defaults to SSH. '
                              'Make sure that password-less authentication to all hosts is possible.')
-    parser.add_argument('--host', action='append', default=[],
+    parser.add_argument('--host', action='append', default=[], required=True,
                         help='Host to offload work to. Specify multiple times to offload work in round-robin schedule.')
     parser.add_argument('--offload-regex-filter', type=str, default=".*",
                         help='Filter which applications to offload by their name using regex. Partial matches are accepted.')
@@ -47,3 +48,6 @@ def run_autofarm(autofarm_root: str):
     for task in pending:
         task.cancel()
 
+
+if __name__ == '__main__':
+    run_autofarm(Path(__file__).parent)
