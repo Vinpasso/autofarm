@@ -14,7 +14,7 @@ def run_autofarm(autofarm_root: str):
                         help='TCP port number on which the jobserver listens.')
     parser.add_argument('--remote-shell', type=str, default="ssh",
                         help='The shell to redirect invoked commands to. Defaults to SSH. '
-                             'Make sure that passwordless authentication to all hosts is possible.')
+                             'Make sure that password-less authentication to all hosts is possible.')
     parser.add_argument('--host', action='append', default=[],
                         help='Host to offload work to. Specify multiple times to offload work in round-robin schedule.')
     parser.add_argument('--offload-regex-filter', type=str, default=".*",
@@ -26,7 +26,7 @@ def run_autofarm(autofarm_root: str):
         print('Please specify an invocation command.')
         exit(255)
 
-    server = JobServer(args.remote_shell, args.host, args.offload_regex_filter)
+    server = JobServer(args.remote_shell, args.host, args.offload_regex_filter, args.offload_regex_filter)
 
     event_loop = asyncio.get_event_loop()
 
