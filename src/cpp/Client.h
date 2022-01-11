@@ -14,10 +14,19 @@ namespace AutoFarm {
 
     class Client {
     private:
+        asio::io_context ioContext{};
+
         tcp::socket socket;
 
+        asio::streambuf request;
+        std::ostream requestStream;
+
+        asio::streambuf response;
+        std::istream responseStream;
     public:
         Client();
+
+        virtual ~Client();
 
         void connect();
 
