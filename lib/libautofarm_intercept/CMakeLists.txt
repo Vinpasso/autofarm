@@ -61,6 +61,7 @@ if(asio_ADDED)
 endif()
 
 # JSON
+set(JSON_BuildTests OFF CACHE INTERNAL "")
 CPMAddPackage("gh:nlohmann/json@3.9.1")
 
 
@@ -92,5 +93,7 @@ if(AUTOFARM_BUILD_TESTS)
             test/test_Intercept.cpp)
     target_link_libraries(autofarm_intercept_test autofarm_intercept gtest gtest_main gmock asio)
     add_dependencies(autofarm_intercept_test autofarm_intercept_test_invoke_exec)
-    add_test(NAME autofarm_intercept_test COMMAND ./libautofarm_intercept_test)
+
+    include(GoogleTest)
+    gtest_discover_tests(autofarm_intercept_test)
 endif()

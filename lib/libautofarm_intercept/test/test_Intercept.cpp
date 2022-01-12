@@ -9,7 +9,7 @@
 #include "../src/ExecInvocationParam.h"
 
 TEST(InterceptTest, ProxyOk) {
-    auto retcode = system("./libautofarm_intercept_test_invoke_exec execv");
+    auto retcode = system("./autofarm_intercept_test_invoke_exec execv");
     auto exitcode = WEXITSTATUS(retcode);
 
     // Default return code of /bin/false
@@ -17,7 +17,7 @@ TEST(InterceptTest, ProxyOk) {
 }
 
 TEST(InterceptTest, MissingVarFallbackOk) {
-    auto retcode = system("LD_PRELOAD=$PWD/libautofarm_intercept.so ./libautofarm_intercept_test_invoke_exec execv");
+    auto retcode = system("LD_PRELOAD=$PWD/libautofarm_intercept.so ./autofarm_intercept_test_invoke_exec execv");
     auto exitcode = WEXITSTATUS(retcode);
 
     // Still default return code of /bin/false
@@ -48,7 +48,7 @@ TEST(InterceptTest, Execv) {
     auto retcode = system("LD_PRELOAD=$PWD/libautofarm_intercept.so "
                           "AUTOFARM_JOBSERVER_HOST=127.0.0.1 "
                           "AUTOFARM_JOBSERVER_PORT=6754 "
-                          "./libautofarm_intercept_test_invoke_exec execv");
+                          "./autofarm_intercept_test_invoke_exec execv");
     auto exitcode = WEXITSTATUS(retcode);
 
     // Should now have been patched to /bin/true
