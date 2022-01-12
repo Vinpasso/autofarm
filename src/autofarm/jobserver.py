@@ -4,54 +4,27 @@ import re
 import shlex
 import sys
 from asyncio import StreamReader, StreamWriter, AbstractServer, IncompleteReadError
-from typing import List
-
 from dataclasses import dataclass
 
-
-@dataclass
-class ExecInvocationParam:
-    command: str
-    arguments: List[str]
-    environment: List[str]
-
-    # TODO: BAD
-    def getenv(self, name: str):
-        return [value for key, value in map(lambda x: x.split('=', 1), self.environment) if key == name][0]
+from autofarm.models import ExecInvocationParam
+from autofarm.offload_command_builder.default import OffloadCommandBuilder
 
 
 @dataclass
 class JobServer:
-    remote_invocation_command: str
-    remote_invocation_hosts: List[str]
-    remote_invocation_skip_directory_change: bool
+    offload_command_builder: OffloadCommandBuilder
     offload_regex_filter: str
 
     _server: AbstractServer = None
-    _remote_host_index = 0
-
-    def build_remote_command(self, request):
-        remote_command = ""
-        if not self.remote_invocation_skip_directory_change:
-            remote_command += f'cd {request.getenv("PWD")} && '
-        remote_command += f'exec {shlex.join(request.arguments)}'
-        return remote_command
 
     def offload_request(self, request: ExecInvocationParam):
-        if not re.search(self.offload_regex_filter, request.command):
+        shell_command = shlex.join(request.arguments)
+        if not re.search(self.offload_regex_filter, shell_command):
             print(f"[AutoFarm] Ignore {' '.join(request.arguments)}")
             return request
 
-        remote_command = self.build_remote_command(request)
-        reforge_result = ExecInvocationParam(
-            self.remote_invocation_command,
-            [self.remote_invocation_command,
-             self.remote_invocation_hosts[self._remote_host_index],
-             remote_command],
-            request.environment
-        )
-        print(f"[AutoFarm] Offloading: {shlex.join(reforge_result.arguments)}", file=sys.stderr)
-        self._remote_host_index = (self._remote_host_index + 1) % len(self.remote_invocation_hosts)
+        reforge_result = self.offload_command_builder.build_command(request)
+        print(f"[AutoFarm] Offloading: {shell_command}", file=sys.stderr)
         return reforge_result
 
     async def handle_client(self, read_channel: StreamReader, write_channel: StreamWriter):

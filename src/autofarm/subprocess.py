@@ -5,13 +5,7 @@ from typing import List
 
 
 async def run_autofarm_invocation(autofarm_root: Path, cmd: str, args: List[str], jobserver_host: str, jobserver_port: int):
-    prepared_env = environ.copy()
-    if prepared_env.get("LD_PRELOAD") is not None:
-        raise RuntimeError("AutoFarm has detected that a LD_PRELOAD library is already set. AutoFarm cannot work "
-                           "without LD_PRELOAD support. Please remove the preloaded library.")
-    prepared_env["LD_PRELOAD"] = f'{autofarm_root.joinpath("libautofarm_intercept.so").absolute()}'
-    prepared_env["AUTOFARM_JOBSERVER_HOST"] = jobserver_host
-    prepared_env["AUTOFARM_JOBSERVER_PORT"] = str(jobserver_port)
+    prepared_env = create_environment(autofarm_root, jobserver_host, jobserver_port)
 
     proc = await asyncio.create_subprocess_exec(
         cmd,
@@ -21,3 +15,14 @@ async def run_autofarm_invocation(autofarm_root: Path, cmd: str, args: List[str]
 
     await proc.communicate()
     return proc.returncode
+
+
+def create_environment(autofarm_root, jobserver_host, jobserver_port):
+    prepared_env = environ.copy()
+    if prepared_env.get("LD_PRELOAD") is not None:
+        raise RuntimeError("AutoFarm has detected that a LD_PRELOAD library is already set. AutoFarm cannot work "
+                           "without LD_PRELOAD support. Please remove the preloaded library.")
+    prepared_env["LD_PRELOAD"] = f'{autofarm_root.joinpath("libautofarm_intercept.so").absolute()}'
+    prepared_env["AUTOFARM_JOBSERVER_HOST"] = jobserver_host
+    prepared_env["AUTOFARM_JOBSERVER_PORT"] = str(jobserver_port)
+    return prepared_env
