@@ -97,7 +97,6 @@ setup(
     ext_modules=[CMakeExtension('autofarm/libautofarm_intercept', 'lib/libautofarm_intercept')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
-    package_dir={"": "src"},
-    packages=setuptools.find_packages("src"),
+    packages=["autofarm"],
     python_requires=">=3.8",
 )
