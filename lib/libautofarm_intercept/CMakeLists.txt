@@ -61,8 +61,7 @@ if(asio_ADDED)
 endif()
 
 # JSON
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-CPMAddPackage("gh:nlohmann/json@3.9.1")
+CPMAddPackage("gh:nlohmann/json@3.10.5")
 
 
 # libautofarm_intercept
