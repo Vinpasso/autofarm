@@ -2,7 +2,7 @@
 // Created by Vincent Bode on 12/01/2022.
 //
 #include <iostream>
-#include <csignal>
+#include <unistd.h>
 
 int main(int argc, char** argv) {
     if(argc != 2) {
