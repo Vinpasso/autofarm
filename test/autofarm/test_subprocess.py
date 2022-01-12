@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from autofarm.subprocess import create_environment
+from autofarm.run_subprocess import create_environment
 
 
 def test_environment_variables():

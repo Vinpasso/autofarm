@@ -2,14 +2,14 @@ import asyncio
 
 from autofarm.jobserver import JobServer, ExecInvocationParam
 from autofarm.models import OffloadCommandBuilder
-from autofarm.offload_command_builder.default import SingleRedirectCommandBuilder
+from autofarm.offload_command_builder.default import RegexRedirectCommandBuilder
 
 
 class TestJobServer:
     offload_command_builder: OffloadCommandBuilder
 
     def setup(self):
-        self.offload_command_builder = SingleRedirectCommandBuilder(['OFFLOAD-COMMAND', 'OFFLOAD-PARAM'])
+        self.offload_command_builder = RegexRedirectCommandBuilder(["^"], ['OFFLOAD-COMMAND OFFLOAD-PARAM '])
         self.server = JobServer(
             self.offload_command_builder,
             'TARGET-.*'

@@ -39,3 +39,34 @@ class SSHCommandBuilder(OffloadCommandBuilder):
              remote_command],
             request.environment
         )
+
+
+def create_ssh(args):
+    return SSHCommandBuilder(
+        args.remote_shell,
+        args.host,
+        args.skip_directory_change
+    )
+
+
+def get_ssh_subcommand(subparsers, parent):
+    # SSH subcommand
+    ssh_subparser = subparsers.add_parser(
+        'ssh', parents=[parent],
+        description="Offload process invocations to one or more remote computers.",
+        help='Offload process invocations to one or more remote computers.'
+    )
+    ssh_subparser.set_defaults(offload_command_builder=SSHCommandBuilder)
+    ssh_subparser.add_argument(
+        '--remote-shell', type=str, default="ssh",
+        help='The shell to redirect invoked commands to. Defaults to SSH. '
+             'Make sure that password-less authentication to all hosts is possible.'
+    )
+    ssh_subparser.add_argument(
+        '--host', action='append', default=[], required=True,
+        help='Host to offload work to. Specify multiple times to offload work in round-robin schedule.'
+    )
+    ssh_subparser.add_argument(
+        '--skip-directory-change', action='store_true',
+        help='Skip the change to the current working directory on the remote host.'
+    )
