@@ -61,5 +61,11 @@ endif()
 # JSON
 CPMAddPackage("gh:nlohmann/json@3.9.1")
 
-add_library(autofarm_intercept SHARED exec_intercept.cpp Client.cpp Client.h exec_intercept.h ExecInvocationParam.cpp ExecInvocationParam.h)
+
+# libautofarm_intercept
+add_library(autofarm_intercept SHARED
+            src/exec_intercept.h src/exec_intercept.cpp
+            src/Client.h src/Client.cpp
+            src/ExecInvocationParam.h src/ExecInvocationParam.cpp)
+
 target_link_libraries(autofarm_intercept asio nlohmann_json::nlohmann_json ${CMAKE_DL_LIBS})

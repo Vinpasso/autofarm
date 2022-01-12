@@ -94,7 +94,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Linux",
     ],
-    ext_modules=[CMakeExtension('autofarm/libautofarm_intercept', 'src/libautofarm_intercept')],
+    ext_modules=[CMakeExtension('autofarm/libautofarm_intercept', 'lib/libautofarm_intercept')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
     package_dir={"": "src"},
