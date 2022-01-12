@@ -99,5 +99,5 @@ setup(
     zip_safe=False,
     package_dir={"": "src"},
     packages=setuptools.find_packages("src"),
-    python_requires=">=3.6",
+    python_requires=">=3.8",
 )
